@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: #fff;
+            color: #202124;
+            visibility: visible !important;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .dark-mode {
+            background: #202124;
+            color: #e8eaed;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+            position: absolute;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-links a, .header-links select {
+            color: #202124;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s ease;
+        }
+
+        .header-links a:hover {
+            color: #1a73e8;
+        }
+
+        .dark-mode .header-links a, .dark-mode .header-links select {
+            color: #e8eaed;
+        }
+
+        .dark-mode .header-links a:hover {
+            color: #8ab4f8;
+        }
+
+        .grid-icon, .theme-selector {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMjAyMTI0IiBkPSJNMTAgNHY0SDZ2LTRoNHptLTQtM3Y5aDloLTh2LTloLTF6bTExIDBoLTR2NGg0di00em0tNCAzaDR2NGgtNHYtNHptLTcgMTFoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0tMy0zdi05aC05djloLTF6Ii8+PC9zdmc+') no-repeat center;
+            background-size: contain;
+        }
+
+        .dark-mode .grid-icon {
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZThlYWVkIiBkPSJNMTAgNHY0SDZ2LTRoNHptLTQtM3Y5aDloLTh2LTloLTF6bTExIDBoLTR2NGg0di00em0tNCAzaDR2NGgtNHYtNHptLTcgMTFoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0zIDBoLTR2NGg0di00em0tMy0zdi05aC05djloLTF6Ii8+PC9zdmc+') no-repeat center;
+        }
+
+        .theme-selector {
+            background: none;
+            border: none;
+            font-size: 13px;
+            padding: 5px;
+        }
+
+        .apps-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background: #fff;
+            border: 1px solid #dfe1e5;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 20;
+            width: 320px;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .apps-dropdown.active {
+            display: block;
+        }
+
+        .dark-mode .apps-dropdown {
+            background: #303134;
+            border-color: #5f6368;
+        }
+
+        .apps-section, .features-section {
+            padding: 15px;
+        }
+
+        .apps-section h4, .features-section h4, .category-section h5 {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #202124;
+            font-weight: 600;
+        }
+
+        .dark-mode .apps-section h4, .dark-mode .features-section h4, .dark-mode .category-section h5 {
+            color: #e8eaed;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            justify-items: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            width: 90px;
+            height: 90px;
+            text-align: center;
+            border: 1px solid #dfe1e5;
+            background: #f8f9fa;
+        }
+
+        .app-item:hover {
+            background: #e8eaed;
+            transform: scale(1.05);
+        }
+
+        .dark-mode .app-item {
+            border-color: #5f6368;
+            background: #3c4043;
+        }
+
+        .dark-mode .app-item:hover {
+            background: #4a4d50;
+        }
+
+        .app-item span.icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .app-item span.label {
+            font-size: 12px;
+            color: #202124;
+            line-height: 1.2;
+            word-wrap: break-word;
+        }
+
+        .dark-mode .app-item span.label {
+            color: #e8eaed;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .feature-item:hover {
+            background: #f1f3f4;
+            transform: translateX(5px);
+        }
+
+        .dark-mode .feature-item:hover {
+            background: #3c4043;
+        }
+
+        .feature-item span {
+            font-size: 13px;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dark-mode .feature-item span {
+            color: #e8eaed;
+        }
+
+        .category-section {
+            margin-bottom: 15px;
+        }
+
+        .category-section .features-grid {
+            display: none;
+        }
+
+        .category-section.expanded .features-grid {
+            display: grid;
+        }
+
+        .show-more {
+            font-size: 12px;
+            color: #1a73e8;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .dark-mode .show-more {
+            color: #8ab4f8;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #dfe1e5;
+            margin: 15px 0;
+        }
+
+        .dark-mode hr {
+            border-top: 1px solid #5f6368;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+            max-width: 584px;
+        }
+
+        #googleLogo {
+            width: 272px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            position: relative;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 44px 12px 44px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            font-size: 16px;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            transition: box-shadow 0.2s ease;
+            animation: slideIn 0.5s ease-in;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjNUY2MzY4IiBkPSJNMTUuNSAxNGgtLjg5bC0uMzUtLjM1QzE0LjY4IDEyLjQzIDE1IDEwLjcyIDE1IDljMCA0LjQyLTMuNTggOC04IDhzLTggMy41OC04IDBjMCAyLjcyLjMyIDQuNDMgLjk0IDUuNjVsLS4zNS4zNUg0bC0uMjUuMjUtLjI1LjI1di44OWwtLjI1LjI1LTMuMjMgMy4yM2EzLjUgMy41IDAgMCAwLS4yNS41YzAgLjI4LjExNC41LjI1LjVoLjg5bDMuMjMtMy4yM3YuODlsLjI1LS4yNS4yNS0uMjVoLjg5bC4zNS0uMzVDMTEuNTcgMTkuNjggMTMuMjggMjAgMTUgMjBjNC40MiAwIDgtMy41OCA4LThzLTMuNTgtOC04LTh6bS03IDdjMCAyLjc2IDIuMjQgNSA1IDVzNS0yLjI4IDUtNWMwLTIuNzYtMi4yNC01LTUtNXMtNSAyLjI0LTUgNXoiLz48L3N2Zz4=') no-repeat 12px center;
+            background-size: 24px;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.4);
+        }
+
+        .dark-mode .search-bar {
+            background: #303134 url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjQkRDMUM2IiBkPSJNMTUuNSAxNGgtLjg5bC0uMzUtLjM1QzE0LjY4IDEyLjQzIDE1IDEwLjcyIDE1IDljMCA0LjQyLTMuNTggOC04IDhzLTggMy41OC04IDBjMCAyLjcyLjMyIDQuNDMgLjk0IDUuNjVsLS4zNS4zNUg0bC0uMjUuMjUtLjI1LjI1di44OWwtLjI1LjI1LTMuMjMgMy4yM2EzLjUgMy41IDAgMCAwLS4yNS41YzAgLjI4LjExNC41LjI1LjVoLjg5bDMuMjMtMy4yM3YuODlsLjI1LS4yNS4yNS0uMjVoLjg5bC4zNS0uMzVDMTEuNTcgMTkuNjggMTMuMjggMjAgMTUgMjBjNC40MiAwIDgtMy41OCA4LThzLTMuNTgtOC04LTh6bS03IDdjMCAyLjc2IDIuMjQgNSA1IDVzNS0yLjI0IDUtNWMwLTIuNzYtMi2yNC01LTUtNXMtNSAyLjI0LTUgNXoiLz48L3N2Zz4=') no-repeat 12px center;
+            background-size: 24px;
+            border-color: #5f6368;
+            color: #e8eaed;
+        }
+
+        .recent-searches, .suggestions {
+            width: 100%;
+            background: #fff;
+            border: 1px solid #dfe1e5;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            display: none;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recent-searches.active, .suggestions.active {
+            display: block;
+        }
+
+        .recent-searches ul, .suggestions ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .recent-searches li, .suggestions li {
+            padding: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .recent-searches li:hover, .suggestions li:hover {
+            background-color: #f1f3f4;
+        }
+
+        .recent-searches .clear-history {
+            padding: 8px;
+            text-align: center;
+            color: #1a73e8;
+            cursor: pointer;
+            border-top: 1px solid #dfe1e5;
+        }
+
+        .dark-mode .recent-searches, .dark-mode .suggestions {
+            background: #303134;
+            border-color: #5f6368;
+        }
+
+        .dark-mode .recent-searches li:hover, .dark-mode .suggestions li:hover {
+            background-color: #3c4043;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #f8f9fa;
+            color: #3c4043;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .buttons button:hover {
+            background: #e8eaed;
+        }
+
+        .dark-mode .buttons button {
+            background: #303134;
+            color: #e8eaed;
+        }
+
+        .dark-mode .buttons button:hover {
+            background: #3c4043;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalOpen 0.3s ease;
+        }
+
+        .dark-mode .modal-content {
+            background: #303134;
+        }
+
+        .modal-content h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
+            color: #202124;
+        }
+
+        .dark-mode .modal-content h3 {
+            color: #e8eaed;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+
+        .dark-mode .close-modal {
+            color: #e8eaed;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .weather-details div {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            width: 45%;
+            text-align: center;
+        }
+
+        .dark-mode .weather-details div {
+            background: #3c4043;
+        }
+
+        .currency-converter, .task-scheduler, .code-snippet, .time-zones, .mind-map, .url-shortener, .crypto-tracker, .voice-memo, .pomodoro-timer, .translator, .bookmarks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .translator-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .translator-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fff;
+            transition: border-color 0.2s ease;
+        }
+
+        .translator-input:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+
+        .translator-select {
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .translator-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: #1a73e8;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .translator-button:hover {
+            background: #1557b0;
+        }
+
+        .translator-result {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 6px;
+            background: #f8f9fa;
+            font-size: 14px;
+            color: #202124;
+            border: 1px solid #dfe1e5;
+        }
+
+        .translator-loading {
+            display: none;
+            font-size: 14px;
+            color: #5f6368;
+            margin-top: 10px;
+        }
+
+        .translator-loading.active {
+            display: block;
+        }
+
+        .dark-mode .translator-input, .dark-mode .translator-select {
+            background: #3c4043;
+            border-color: #5f6368;
+            color: #e8eaed;
+        }
+
+        .dark-mode .translator-input:focus {
+            border-color: #8ab4f8;
+        }
+
+        .dark-mode .translator-button {
+            background: #8ab4f8;
+            color: #202124;
+        }
+
+        .dark-mode .translator-button:hover {
+            background: #6b9bf7;
+        }
+
+        .dark-mode .translator-result {
+            background: #3c4043;
+            color: #e8eaed;
+            border-color: #5f6368;
+        }
+
+        .dark-mode .translator-loading {
+            color: #bdc1c6;
+        }
+
+        .currency-converter input, .currency-converter select,
+        .task-scheduler input, .task-scheduler select,
+        .code-snippet textarea, .code-snippet select,
+        .time-zones select,
+        .mind-map canvas,
+        .url-shortener input, .url-shortener button,
+        .crypto-tracker select,
+        .voice-memo button, .voice-memo audio,
+        .pomodoro-timer input, .pomodoro-timer button,
+        .translator select,
+        .bookmarks input, .bookmarks button {
+            padding: 8px;
+            border: 1px solid #dfe1e5;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .dark-mode .currency-converter input, .dark-mode .currency-converter select,
+        .dark-mode .task-scheduler input, .dark-mode .task-scheduler select,
+        .dark-mode .code-snippet textarea, .dark-mode .code-snippet select,
+        .dark-mode .time-zones select,
+        .dark-mode .mind-map canvas,
+        .dark-mode .url-shortener input, .dark-mode .url-shortener button,
+        .dark-mode .crypto-tracker select,
+        .dark-mode .voice-memo button, .dark-mode .voice-memo audio,
+        .dark-mode .pomodoro-timer input, .dark-mode .pomodoro-timer button,
+        .dark-mode .translator select,
+        .dark-mode .bookmarks input, .dark-mode .bookmarks button {
+            background: #3c4043;
+            border-color: #5f6368;
+            color: #e8eaed;
+        }
+
+        .mind-map canvas {
+            border: 1px solid #dfe1e5;
+            width: 100%;
+            height: 150px;
+        }
+
+        .bookmarks ul, .task-scheduler ul, .code-snippet ul, .time-zones div, .voice-memo ul {
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        footer {
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+            background: #f2f2f2;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 13px;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .dark-mode footer {
+            background: #171717;
+        }
+
+        footer a {
+            color: #70757a;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .dark-mode footer a {
+            color: #bdc1c6;
+        }
+
+        footer a:hover {
+            color: #1a73e8;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(26, 115, 232, 0.2);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .dark-mode .particle {
+            background: rgba(138, 180, 248, 0.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes modalOpen {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            #googleLogo {
+                width: 200px;
+            }
+            .search-bar {
+                width: 90%;
+            }
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .apps-dropdown {
+                width: 90%;
+                right: 5%;
+            }
+            .translator-form {
+                flex-direction: column;
+            }
+            .translator-input, .translator-select, .translator-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+    <header>
+        <div class="header-links">
+            <a href="https://mail.google.com">Gmail</a>
+            <a href="https://www.google.com/imghp">Images</a>
+            <div class="grid-icon" onclick="toggleAppsDropdown()"></div>
+            <select class="theme-selector" onchange="changeTheme(this.value)">
+                <option value="light">Light Theme</option>
+                <option value="dark">Dark Theme</option>
+            </select>
+        </div>
+        <div class="apps-dropdown" id="appsDropdown">
+            <div class="apps-section">
+                <h4>Google Apps</h4>
+                <div class="apps-grid">
+                    <div class="app-item" onclick="openApp('https://myaccount.google.com')">
+                        <span class="icon">🧑</span>
+                        <span class="label">Account</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://www.google.com')">
+                        <span class="icon">🔍</span>
+                        <span class="label">Search</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://www.google.com/maps')">
+                        <span class="icon">🗺️</span>
+                        <span class="label">Maps</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://www.youtube.com')">
+                        <span class="icon">📹</span>
+                        <span class="label">YouTube</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://bard.google.com')">
+                        <span class="icon">🤖</span>
+                        <span class="label">Gemini</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://news.google.com')">
+                        <span class="icon">📰</span>
+                        <span class="label">News</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://mail.google.com')">
+                        <span class="icon">✉️</span>
+                        <span class="label">Gmail</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://meet.google.com')">
+                        <span class="icon">📅</span>
+                        <span class="label">Meet</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://chat.google.com')">
+                        <span class="icon">💬</span>
+                        <span class="label">Chat</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://contacts.google.com')">
+                        <span class="icon">📇</span>
+                        <span class="label">Contacts</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://drive.google.com')">
+                        <span class="icon">📁</span>
+                        <span class="label">Drive</span>
+                    </div>
+                    <div class="app-item" onclick="openApp('https://calendar.google.com')">
+                        <span class="icon">🕒</span>
+                        <span class="label">Calendar</span>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="features-section">
+                <h4>Custom Features</h4>
+                <div class="category-section" id="productivityCategory">
+                    <h5>Productivity</h5>
+                    <div class="features-grid">
+                        <div class="feature-item" onclick="openModal('tasksModal')"><span>📋 Task Scheduler</span></div>
+                        <div class="feature-item" onclick="openModal('pomodoroModal')"><span>⏲️ Pomodoro Timer</span></div>
+                        <div class="feature-item" onclick="openModal('translatorModal')"><span>🌐 Translator</span></div>
+                        <div class="feature-item hidden" onclick="openModal('timezonesModal')"><span>🕒 Time Zones</span></div>
+                    </div>
+                    <div class="show-more" onclick="toggleCategory('productivityCategory')">Show More</div>
+                </div>
+                <hr>
+                <div class="category-section" id="utilitiesCategory">
+                    <h5>Utilities</h5>
+                    <div class="features-grid">
+                        <div class="feature-item" onclick="openModal('weatherModal')"><span>🌤️ Weather</span></div>
+                        <div class="feature-item" onclick="openModal('currencyModal')"><span>💱 Currency Converter</span></div>
+                        <div class="feature-item" onclick="openModal('urlshortenerModal')"><span>🔗 URL Shortener</span></div>
+                        <div class="feature-item hidden" onclick="openModal('cryptoModal')"><span>📈 Crypto Prices</span></div>
+                    </div>
+                    <div class="show-more" onclick="toggleCategory('utilitiesCategory')">Show More</div>
+                </div>
+                <hr>
+                <div class="category-section" id="personalizationCategory">
+                    <h5>Personalization</h5>
+                    <div class="features-grid">
+                        <div class="feature-item" onclick="openModal('wallpaperModal')"><span>🎨 Wallpaper Generator</span></div>
+                        <div class="feature-item" onclick="openModal('bookmarksModal')"><span>🔖 Bookmarks</span></div>
+                        <div class="feature-item" onclick="openModal('mindmapModal')"><span>🧠 Mind Map</span></div>
+                    </div>
+                </div>
+                <hr>
+                <div class="category-section" id="advancedCategory">
+                    <h5>Advanced</h5>
+                    <div class="features-grid">
+                        <div class="feature-item" onclick="openModal('queryModal')"><span>🔍 Query Refiner</span></div>
+                        <div class="feature-item" onclick="openModal('newsModal')"><span>📰 News Digest</span></div>
+                        <div class="feature-item" onclick="openModal('snippetsModal')"><span>💻 Code Snippets</span></div>
+                        <div class="feature-item hidden" onclick="openModal('voicememoModal')"><span>🎙️ Voice Memo</span></div>
+                    </div>
+                    <div class="show-more" onclick="toggleCategory('advancedCategory')">Show More</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google Logo" id="googleLogo">
+        <form action="https://www.google.com/search" method="get" class="search-form">
+            <div class="search-container">
+                <input type="text" name="q" placeholder="Search Google or type a URL" class="search-bar" id="searchBar">
+            </div>
+            <div class="recent-searches" id="recentSearches">
+                <ul id="recentSearchesList"></ul>
+                <div class="clear-history" onclick="clearSearchHistory()">Clear Search History</div>
+            </div>
+            <div class="suggestions" id="suggestions">
+                <ul id="suggestionsList"></ul>
+            </div>
+            <div class="buttons">
+                <button type="submit">Google Search</button>
+                <button type="button" onclick="window.location.href='https://www.google.com/doodles'">I'm Feeling Lucky</button>
+            </div>
+        </form>
+    </main>
+    <div class="modal" id="weatherModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('weatherModal')">×</span>
+            <h3>Weather</h3>
+            <p id="weatherData">Fetching weather...</p>
+            <div class="weather-details">
+                <div><p id="humidity">--%</p></div>
+                <div><p id="windSpeed">-- km/h</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="currencyModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('currencyModal')">×</span>
+            <h3>Currency Converter</h3>
+            <div class="currency-converter">
+                <input type="number" id="currencyAmount" value="1" min="0">
+                <select id="fromCurrency">
+                    <option value="USD">USD</option>
+                    <option value="INR">INR</option>
+                </select>
+                <span>=</span>
+                <input type="text" id="currencyResult" readonly>
+                <select id="toCurrency">
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="queryModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('queryModal')">×</span>
+            <h3>Query Refiner</h3>
+            <input type="text" id="queryInput" placeholder="Enter search query">
+            <p id="querySuggestions"></p>
+        </div>
+    </div>
+    <div class="modal" id="newsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('newsModal')">×</span>
+            <h3>News Digest</h3>
+            <select id="newsCategory">
+                <option value="tech">Tech</option>
+                <option value="science">Science</option>
+            </select>
+            <ul id="newsList"></ul>
+        </div>
+    </div>
+    <div class="modal" id="tasksModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('tasksModal')">×</span>
+            <h3>Task Scheduler</h3>
+            <div class="task-scheduler">
+                <input type="text" id="taskText" placeholder="Task name">
+                <input type="date" id="taskDate">
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button onclick="addTask()">Add Task</button>
+                <ul id="taskList"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="snippetsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('snippetsModal')">×</span>
+            <h3>Code Snippets</h3>
+            <div class="code-snippet">
+                <textarea id="codeText" placeholder="Enter code"></textarea>
+                <select id="codeLanguage">
+                    <option value="html">HTML</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                </select>
+                <button onclick="saveCode()">Save</button>
+                <ul id="codeList"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="timezonesModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('timezonesModal')">×</span>
+            <h3>Time Zones</h3>
+            <div class="time-zones">
+                <select id="citySelect">
+                    <option value="America/New_York">New York</option>
+                    <option value="Europe/London">London</option>
+                    <option value="Asia/Tokyo">Tokyo</option>
+                    <option value="Australia/Sydney">Sydney</option>
+                    <option value="Asia/Dubai">Dubai</option>
+                    <option value="America/Los_Angeles">Los Angeles</option>
+                    <option value="Asia/Shanghai">Shanghai</option>
+                    <option value="Europe/Paris">Paris</option>
+                    <option value="Africa/Johannesburg">Johannesburg</option>
+                    <option value="America/Sao_Paulo">São Paulo</option>
+                    <option value="Asia/Kolkata">Mumbai</option>
+                    <option value="Pacific/Auckland">Auckland</option>
+                    <!-- Add more cities as needed -->
+                </select>
+                <button onclick="addCity()">Add City</button>
+                <div id="timezoneLoading" class="timezone-loading">Loading...</div>
+                <div id="timeZones" class="time-zones-list"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="mindmapModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('mindmapModal')">×</span>
+            <h3>Mind Map</h3>
+            <div class="mind-map">
+                <canvas id="mindMapCanvas"></canvas>
+                <button onclick="addNode()">Add Node</button>
+                <button onclick="clearMindMap()">Clear</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="urlshortenerModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('urlshortenerModal')">×</span>
+            <h3>URL Shortener</h3>
+            <div class="url-shortener">
+                <input type="text" id="longUrl" placeholder="Enter URL">
+                <button onclick="shortenUrl()">Shorten</button>
+                <p id="shortUrl"></p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="cryptoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('cryptoModal')">×</span>
+            <h3>Crypto Prices</h3>
+            <div class="crypto-tracker">
+                <select id="cryptoSelect">
+                    <option value="bitcoin">Bitcoin</option>
+                    <option value="ethereum">Ethereum</option>
+                </select>
+                <p id="cryptoPrice">Fetching price...</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="voicememoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('voicememoModal')">×</span>
+            <h3>Voice Memo</h3>
+            <div class="voice-memo">
+                <button onclick="startRecording()">Record</button>
+                <button onclick="stopRecording()">Stop</button>
+                <audio id="memoPlayer" controls></audio>
+                <ul id="memoList"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="pomodoroModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('pomodoroModal')">×</span>
+            <h3>Pomodoro Timer</h3>
+            <div class="pomodoro-timer">
+                <input type="number" id="workTime" value="25" min="1">
+                <input type="number" id="breakTime" value="5" min="1">
+                <button onclick="startPomodoro()">Start</button>
+                <p id="pomodoroStatus"></p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="translatorModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('translatorModal')">×</span>
+            <h3>Translator</h3>
+            <div class="translator">
+                <div class="translator-form">
+                    <input type="text" id="translateText" placeholder="Enter text to translate" class="translator-input">
+                    <select id="fromLang" class="translator-select">
+                        <option value="auto">Auto-detect</option>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                    </select>
+                    <select id="toLang" class="translator-select">
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                    </select>
+                    <button onclick="translateText()" class="translator-button">Translate</button>
+                </div>
+                <div id="translatorLoading" class="translator-loading">Translating...</div>
+                <div id="translatedText" class="translator-result"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="wallpaperModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('wallpaperModal')">×</span>
+            <h3>Wallpaper Generator</h3>
+            <div class="wallpaper-generator">
+                <input type="color" id="wallpaperColor" value="#1a73e8">
+                <button onclick="generateWallpaper()">Generate</button>
+                <canvas id="wallpaperCanvas" width="200" height="200"></canvas>
+                <a id="downloadWallpaper" style="display: none;">Download</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="bookmarksModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('bookmarksModal')">×</span>
+            <h3>Bookmarks</h3>
+            <div class="bookmarks">
+                <input type="text" id="bookmarkUrl" placeholder="Add URL (e.g., https://example.com)">
+                <button onclick="addBookmark()">Add</button>
+                <ul id="bookmarks"></ul>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a href="https://about.google/">About</a>
+        <a href="https://www.google.com/intl/en_us/ads/">Advertising</a>
+        <a href="https://www.google.com/services/">Business</a>
+        <a href="https://www.google.com/intl/en_us/howsearchworks/">How Search Works</a>
+        <a href="https://www.google.com/intl/en_us/policies/privacy/">Privacy</a>
+        <a href="https://www.google.com/intl/en_us/policies/terms/">Terms</a>
+    </footer>
+    <script>
+        // Apps Dropdown
+        function toggleAppsDropdown() {
+            const dropdown = document.getElementById('appsDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Open Google Apps
+        function openApp(url) {
+            try {
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error opening app:', error);
+                alert('Unable to open the app. Please check your browser settings.');
+            }
+        }
+
+        // Modals
+        function openModal(modalId) {
+            try {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => modal.classList.remove('active'));
+                const modal = document.getElementById(modalId);
+                if (!modal) throw new Error(`Modal with ID ${modalId} not found`);
+                modal.classList.add('active');
+                if (modalId === 'weatherModal') getWeather();
+                if (modalId === 'currencyModal') fetchCurrency();
+                if (modalId === 'newsModal') updateNews();
+                if (modalId === 'timezonesModal') updateTimeZones();
+                if (modalId === 'cryptoModal') updateCrypto();
+                if (modalId === 'translatorModal') {
+                    document.getElementById('translatedText').textContent = '';
+                    document.getElementById('translatorLoading').classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Error opening modal:', error);
+                alert('Unable to open the feature. Please try again.');
+            }
+        }
+
+        function closeModal(modalId) {
+            try {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => modal.classList.remove('active'));
+                if (modalId === 'pomodoroModal') clearInterval(pomodoroInterval);
+            } catch (error) {
+                console.error('Error closing modal:', error);
+            }
+        }
+
+        // Toggle Categories
+        function toggleCategory(categoryId) {
+            const category = document.getElementById(categoryId);
+            const showMore = category.querySelector('.show-more');
+            category.classList.toggle('expanded');
+            showMore.textContent = category.classList.contains('expanded') ? 'Show Less' : 'Show More';
+            const hiddenItems = category.querySelectorAll('.feature-item.hidden');
+            hiddenItems.forEach(item => {
+                item.classList.toggle('hidden');
+            });
+        }
+
+        // Recent Searches
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        const searchBar = document.getElementById('searchBar');
+        const recentSearches = document.getElementById('recentSearches');
+        const recentSearchesList = document.getElementById('recentSearchesList');
+        const suggestions = document.getElementById('suggestions');
+        const suggestionsList = document.getElementById('suggestionsList');
+
+        function updateRecentSearches() {
+            try {
+                recentSearchesList.innerHTML = searchHistory.map(query => `<li onclick="searchBar.value='${query}'; recentSearches.classList.remove('active'); suggestions.classList.remove('active')">${query}</li>`).join('');
+            } catch (error) {
+                console.error('Recent searches error:', error);
+            }
+        }
+
+        searchBar.addEventListener('focus', () => {
+            if (searchHistory.length) recentSearches.classList.add('active');
+        });
+
+        searchBar.addEventListener('blur', () => {
+            setTimeout(() => {
+                recentSearches.classList.remove('active');
+                suggestions.classList.remove('active');
+            }, 200);
+        });
+
+        searchBar.addEventListener('input', () => {
+            if (searchHistory.length) recentSearches.classList.add('active');
+            updateSuggestions(searchBar.value);
+        });
+
+        document.querySelector('.search-form').addEventListener('submit', (e) => {
+            const query = searchBar.value.trim();
+            if (query && !searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                if (searchHistory.length > 5) searchHistory.pop();
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                updateRecentSearches();
+            }
+        });
+
+        function clearSearchHistory() {
+            searchHistory = [];
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            updateRecentSearches();
+            recentSearches.classList.remove('active');
+        }
+
+        function updateSuggestions(query) {
+            const mockSuggestions = ['AI trends', 'Web development', 'Machine learning', 'Tech news', 'Coding tutorials'];
+            suggestionsList.innerHTML = mockSuggestions
+                .filter(s => s.toLowerCase().includes(query.toLowerCase()))
+                .map(s => `<li onclick="searchBar.value='${s}'; suggestions.classList.remove('active')">${s}</li>`).join('');
+            suggestions.classList.add('active');
+        }
+
+        // Theme Switcher
+        function changeTheme(theme) {
+            document.body.classList.remove('light-mode', 'dark-mode');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.add('light-mode');
+            }
+        }
+
+        // Weather (Open-Meteo)
+        function getWeather() {
+            try {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(fetchWeather, showWeatherError);
+                } else {
+                    document.getElementById('weatherData').textContent = 'Geolocation not supported';
+                }
+            } catch (error) {
+                console.error('Weather error:', error);
+                document.getElementById('weatherData').textContent = 'Weather unavailable';
+            }
+        }
+
+        function fetchWeather(position) {
+            try {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}¤t_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.current_weather) {
+                            displayWeather(data);
+                        } else {
+                            throw new Error('Weather data unavailable');
+                        }
+                    })
+                    .catch(err => {
+                        throw err;
+                    });
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                document.getElementById('weatherData').textContent = 'Weather unavailable (Mock: 25°C ☀️)';
+                document.getElementById('humidity').textContent = '60%';
+                document.getElementById('windSpeed').textContent = '10 km/h';
+            }
+        }
+
+        function displayWeather(data) {
+            const current = data.current_weather;
+            const weatherCode = current.weathercode;
+            const iconMap = {
+                0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+                51: '🌧️', 53: '🌧️', 55: '🌧️', 56: '🌧️', 57: '🌧️',
+                61: '🌧️', 63: '🌧️', 65: '🌧️', 66: '🌧️', 67: '🌧️',
+                71: '🌨️', 73: '🌨️', 75: '🌨️', 77: '🌨️', 80: '🌧️',
+                81: '🌧️', 82: '🌧️', 85: '🌨️', 86: '🌨️', 95: '⛈️',
+                96: '⛈️', 99: '⛈️'
+            };
+            document.getElementById('weatherData').textContent = `Temperature: ${current.temperature}°C ${iconMap[weatherCode] || '🌤️'}`;
+            document.getElementById('humidity').textContent = `${data.hourly.relativehumidity_2m[0]}%`;
+            document.getElementById('windSpeed').textContent = `${current.windspeed} km/h`;
+        }
+
+        function showWeatherError(err) {
+            const weatherData = document.getElementById('weatherData');
+            switch (err.code) {
+                case err.PERMISSION_DENIED:
+                    weatherData.textContent = 'Geolocation denied (Mock: 25°C ☀️)';
+                    break;
+                case err.POSITION_UNAVAILABLE:
+                    weatherData.textContent = 'Location unavailable (Mock: 25°C ☀️)';
+                    break;
+                case err.TIMEOUT:
+                    weatherData.textContent = 'Location request timed out (Mock: 25°C ☀️)';
+                    break;
+                default:
+                    weatherData.textContent = 'Geolocation error (Mock: 25°C ☀️)';
+            }
+            document.getElementById('humidity').textContent = '60%';
+            document.getElementById('windSpeed').textContent = '10 km/h';
+        }
+
+        // Currency Converter (Mock)
+        async function fetchCurrency() {
+            try {
+                const amount = document.getElementById('currencyAmount').value;
+                const from = document.getElementById('fromCurrency').value;
+                const to = document.getElementById('toCurrency').value;
+                const result = document.getElementById('currencyResult');
+                const mockRates = {
+                    USD: { INR: 83.5 },
+                    INR: { USD: 0.012 }
+                };
+                if (mockRates[from] && mockRates[from][to]) {
+                    const rate = mockRates[from][to];
+                    result.value = (amount * rate).toFixed(2);
+                } else {
+                    result.value = 'N/A';
+                }
+            } catch (error) {
+                console.error('Currency error:', error);
+                document.getElementById('currencyResult').value = 'N/A';
+            }
+        }
+
+        // Query Refiner
+        document.getElementById('queryInput').addEventListener('input', () => {
+            try {
+                const query = document.getElementById('queryInput').value.toLowerCase();
+                const suggestions = {
+                    'machine learning': ['machine learning tutorials', 'machine learning algorithms'],
+                    'web development': ['web development frameworks', 'web development tools'],
+                    'ai': ['ai applications', 'ai research papers']
+                };
+                document.getElementById('querySuggestions').textContent = suggestions[query] ? suggestions[query].join(', ') : 'No suggestions';
+            } catch (error) {
+                console.error('Query refiner error:', error);
+                document.getElementById('querySuggestions').textContent = 'Error loading suggestions';
+            }
+        });
+
+        // News Digest
+        function updateNews() {
+            try {
+                const category = document.getElementById('newsCategory').value;
+                const mockNews = {
+                    tech: ['AI Breakthroughs in 2025', 'Quantum Computing Advances'],
+                    science: ['New Exoplanet Discovered', 'Climate Change Solutions']
+                };
+                document.getElementById('newsList').innerHTML = mockNews[category].map(n => `<li>${n}</li>`).join('');
+            } catch (error) {
+                console.error('News digest error:', error);
+                document.getElementById('newsList').innerHTML = '<li>Error loading news</li>';
+            }
+        }
+
+        document.getElementById('newsCategory').addEventListener('change', updateNews);
+
+        // Task Scheduler
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        function updateTasks() {
+            try {
+                document.getElementById('taskList').innerHTML = tasks.map((t, i) => `<li>${t.text} (${t.date}, ${t.priority}) <button onclick="removeTask(${i})">X</button></li>`).join('');
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            } catch (error) {
+                console.error('Tasks error:', error);
+            }
+        }
+
+        function addTask() {
+            try {
+                const text = document.getElementById('taskText').value;
+                const date = document.getElementById('taskDate').value;
+                const priority = document.getElementById('taskPriority').value;
+                if (text && date) {
+                    tasks.push({ text, date, priority });
+                    updateTasks();
+                    document.getElementById('taskText').value = '';
+                    document.getElementById('taskDate').value = '';
+                }
+            } catch (error) {
+                console.error('Add task error:', error);
+            }
+        }
+
+        function removeTask(index) {
+            try {
+                tasks.splice(index, 1);
+                updateTasks();
+            } catch (error) {
+                console.error('Remove task error:', error);
+            }
+        }
+
+        // Code Snippets
+        let snippets = JSON.parse(localStorage.getItem('snippets')) || [];
+        function updateSnippets() {
+            try {
+                document.getElementById('codeList').innerHTML = snippets.map((s, i) => `<li>${s.language}: ${s.text.substring(0, 20)}... <button onclick="removeSnippet(${i})">X</button></li>`).join('');
+                localStorage.setItem('snippets', JSON.stringify(snippets));
+            } catch (error) {
+                console.error('Snippets error:', error);
+            }
+        }
+
+        function saveCode() {
+            try {
+                const text = document.getElementById('codeText').value;
+                const language = document.getElementById('codeLanguage').value;
+                if (text) {
+                    snippets.push({ text, language });
+                    updateSnippets();
+                    document.getElementById('codeText').value = '';
+                }
+            } catch (error) {
+                console.error('Save code error:', error);
+            }
+        }
+
+        function removeSnippet(index) {
+            try {
+                snippets.splice(index, 1);
+                updateSnippets();
+            } catch (error) {
+                console.error('Remove snippet error:', error);
+            }
+        }
+
+        // Time Zones
+let cities = JSON.parse(localStorage.getItem('cities')) || [];
+
+// Curated list of major cities/timezones (extend as needed)
+const cityList = [
+    { value: 'America/New_York', name: 'New York' },
+    { value: 'Europe/London', name: 'London' },
+    { value: 'Asia/Tokyo', name: 'Tokyo' },
+    { value: 'Australia/Sydney', name: 'Sydney' },
+    { value: 'Asia/Dubai', name: 'Dubai' },
+    { value: 'America/Los_Angeles', name: 'Los Angeles' },
+    { value: 'Asia/Shanghai', name: 'Shanghai' },
+    { value: 'Europe/Paris', name: 'Paris' },
+    { value: 'Africa/Johannesburg', name: 'Johannesburg' },
+    { value: 'America/Sao_Paulo', name: 'São Paulo' },
+    { value: 'Asia/Kolkata', name: 'Mumbai' },
+    { value: 'Pacific/Auckland', name: 'Auckland' },
+    { value: 'America/Chicago', name: 'Chicago' },
+    { value: 'Asia/Singapore', name: 'Singapore' },
+    { value: 'Europe/Moscow', name: 'Moscow' }
+    // Add more cities as needed
+];
+
+// Dynamically populate citySelect
+document.addEventListener('DOMContentLoaded', () => {
+    const citySelect = document.getElementById('citySelect');
+    citySelect.innerHTML = cityList.map(city => `<option value="${city.value}">${city.name}</option>`).join('');
+    if (cities.length) {
+        updateTimeZones();
+    }
+});
+
+async function updateTimeZones() {
+    try {
+        const timeZonesDiv = document.getElementById('timeZones');
+        const loadingDiv = document.getElementById('timezoneLoading');
+
+        // Show loading state
+        loadingDiv.classList.add('active');
+
+        // Map cities to HTML cards
+        const cityCards = await Promise.all(cities.map(async (timezone) => {
+            try {
+                // Get city name from cityList or infer
+                const cityObj = cityList.find(c => c.value === timezone);
+                const cityName = cityObj ? cityObj.name : timezone.split('/').pop().replace('_', ' ');
+
+                // Calculate current time
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: timezone,
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
+                });
+                const timeString = formatter.format(new Date());
+
+                // Get UTC offset
+                const offsetFormatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: timezone,
+                    timeZoneName: 'short'
+                });
+                const offset = offsetFormatter.formatToParts(new Date()).find(part => part.type === 'timeZoneName').value;
+
+                // Call Gemini API for description
+                const prompt = `Provide a brief description (1-2 sentences) of the timezone for ${cityName} (${timezone}), including its UTC offset and any notable characteristics (e.g., daylight saving time).`;
+                console.log('Gemini prompt:', prompt);
+
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyChazsHCJQo53WM_g0oifM0ameYjXGkrIQ', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.3,
+                            maxOutputTokens: 100
+                        }
+                    })
+                });
+
+                let description = 'No description available.';
+                if (response.ok) {
+                    const data = await response.json();
+                    description = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()?.replace(/[`*]/g, '') || description;
+                } else {
+                    console.warn(`Gemini API error for ${timezone}: ${response.status}`);
+                }
+
+                // Return card HTML
+                return `
+                    <div class="timezone-card" data-timezone="${timezone}">
+                        <span class="remove-city" onclick="removeCity('${timezone}')">×</span>
+                        <h4>${cityName}</h4>
+                        <p>Time: ${timeString}</p>
+                        <p>Timezone: ${timezone} (${offset})</p>
+                        <p>${description}</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(`Error processing ${timezone}:`, error.message);
+                return `<p>Error loading ${timezone}</p>`;
+            }
+        }));
+
+        // Update UI
+        timeZonesDiv.innerHTML = cityCards.join('');
+        loadingDiv.classList.remove('active');
+
+        // Save to localStorage
+        localStorage.setItem('cities', JSON.stringify(cities));
+    } catch (error) {
+        console.error('Time zones error:', error.message);
+        document.getElementById('timezoneLoading').classList.remove('active');
+        document.getElementById('timeZones').innerHTML = '<p>Error loading time zones</p>';
+    }
+}
+
+function addCity() {
+    try {
+        const citySelect = document.getElementById('citySelect');
+        const timezone = citySelect.value;
+
+        // Prevent duplicates
+        if (cities.includes(timezone)) {
+            alert('This city is already added.');
+            return;
+        }
+
+        // Add city and update
+        cities.push(timezone);
+        updateTimeZones();
+    } catch (error) {
+        console.error('Add city error:', error.message);
+        document.getElementById('timeZones').innerHTML = '<p>Error adding city</p>';
+    }
+}
+
+function removeCity(timezone) {
+    try {
+        cities = cities.filter(city => city !== timezone);
+        updateTimeZones();
+    } catch (error) {
+        console.error('Remove city error:', error.message);
+        document.getElementById('timeZones').innerHTML = '<p>Error removing city</p>';
+    }
+}
+        // Mind Map
+        let nodes = JSON.parse(localStorage.getItem('mindMap')) || [];
+        const canvas = document.getElementById('mindMapCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawMindMap() {
+            try {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                nodes.forEach(node => {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#1a73e8';
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.text, node.x, node.y + 5);
+                });
+                localStorage.setItem('mindMap', JSON.stringify(nodes));
+            } catch (error) {
+                console.error('Mind map error:', error);
+            }
+        }
+
+        function addNode() {
+            try {
+                nodes.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, text: `Node ${nodes.length + 1}` });
+                drawMindMap();
+            } catch (error) {
+                console.error('Add node error:', error);
+            }
+        }
+
+        function clearMindMap() {
+            try {
+                nodes = [];
+                drawMindMap();
+            } catch (error) {
+                console.error('Clear mind map error:', error);
+            }
+        }
+
+        canvas.addEventListener('click', (e) => {
+            try {
+                const rect = canvas.getBoundingClientRect();
+                nodes.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, text: `Node ${nodes.length + 1}` });
+                drawMindMap();
+            } catch (error) {
+                console.error('Canvas click error:', error);
+            }
+        });
+
+        // URL Shortener
+        function shortenUrl() {
+            try {
+                const longUrl = document.getElementById('longUrl').value;
+                if (longUrl) {
+                    const short = 'short.ly/' + Math.random().toString(36).substring(2, 8);
+                    document.getElementById('shortUrl').textContent = short;
+                }
+            } catch (error) {
+                console.error('URL shortener error:', error);
+                document.getElementById('shortUrl').textContent = 'Error shortening URL';
+            }
+        }
+
+        // Crypto Prices (Mock)
+        function updateCrypto() {
+            try {
+                const crypto = document.getElementById('cryptoSelect').value;
+                const mockPrices = { bitcoin: 65000, ethereum: 3200 };
+                document.getElementById('cryptoPrice').textContent = `$${mockPrices[crypto]}`;
+            } catch (error) {
+                console.error('Crypto error:', error);
+                document.getElementById('cryptoPrice').textContent = 'Error fetching price';
+            }
+        }
+
+        document.getElementById('cryptoSelect').addEventListener('change', updateCrypto);
+
+        // Voice Memo
+        let mediaRecorder;
+        let memos = JSON.parse(localStorage.getItem('memos')) || [];
+
+        function updateMemos() {
+            try {
+                document.getElementById('memoList').innerHTML = memos.map((m, i) => `<li>Memo ${i + 1} <button onclick="playMemo('${m}')">Play</button> <button onclick="removeMemo(${i})">X</button></li>`).join('');
+                localStorage.setItem('memos', JSON.stringify(memos));
+            } catch (error) {
+                console.error('Memos error:', error);
+            }
+        }
+
+        function startRecording() {
+            try {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        let chunks = [];
+                        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                        mediaRecorder.onstop = () => {
+                            const blob = new Blob(chunks, { type: 'audio/webm' });
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                memos.push(reader.result);
+                                updateMemos();
+                            };
+                            reader.readAsDataURL(blob);
+                        };
+                        mediaRecorder.start();
+                    })
+                    .catch(err => {
+                        throw err;
+                    });
+            } catch (error) {
+                console.error('Recording error:', error);
+                alert('Unable to record. Please check microphone permissions.');
+            }
+        }
+
+        function stopRecording() {
+            try {
+                if (mediaRecorder) mediaRecorder.stop();
+            } catch (error) {
+                console.error('Stop recording error:', error);
+            }
+        }
+
+        function playMemo(dataUrl) {
+            try {
+                document.getElementById('memoPlayer').src = dataUrl;
+            } catch (error) {
+                console.error('Play memo error:', error);
+            }
+        }
+
+        function removeMemo(index) {
+            try {
+                memos.splice(index, 1);
+                updateMemos();
+            } catch (error) {
+                console.error('Remove memo error:', error);
+            }
+        }
+
+        // Pomodoro Timer
+        let pomodoroInterval;
+        function startPomodoro() {
+            try {
+                const workTime = parseInt(document.getElementById('workTime').value) * 60;
+                const breakTime = parseInt(document.getElementById('breakTime').value) * 60;
+                let time = workTime;
+                let isWork = true;
+                document.getElementById('pomodoroStatus').textContent = `Work: ${Math.floor(time / 60)}:${(time % 60).toString().padStart(2, '0')}`;
+                clearInterval(pomodoroInterval);
+                pomodoroInterval = setInterval(() => {
+                    time--;
+                    document.getElementById('pomodoroStatus').textContent = `${isWork ? 'Work' : 'Break'}: ${Math.floor(time / 60)}:${(time % 60).toString().padStart(2, '0')}`;
+                    if (time <= 0) {
+                        isWork = !isWork;
+                        time = isWork ? workTime : breakTime;
+                    }
+                }, 1000);
+            } catch (error) {
+                console.error('Pomodoro error:', error);
+                document.getElementById('pomodoroStatus').textContent = 'Error starting timer';
+            }
+        }
+
+        // Translator (Enhanced)
+        async function translateText() {
+    try {
+        const text = document.getElementById('translateText').value.trim();
+        const fromLang = document.getElementById('fromLang').value;
+        const toLang = document.getElementById('toLang').value;
+        const resultDiv = document.getElementById('translatedText');
+        const loadingDiv = document.getElementById('translatorLoading');
+        const translateButton = document.querySelector('.translator-button');
+
+        // Input validation
+        if (!text) {
+            resultDiv.textContent = 'Please enter text to translate.';
+            return;
+        }
+        if (fromLang !== 'auto' && fromLang === toLang) {
+            resultDiv.textContent = 'Source and target languages cannot be the same.';
+            return;
+        }
+
+        // Disable button to prevent multiple clicks
+        translateButton.disabled = true;
+
+        // Show loading state
+        resultDiv.textContent = '';
+        loadingDiv.classList.add('active');
+
+        // Map language codes to full names for the prompt
+        const langMap = {
+            en: 'English',
+            es: 'Spanish',
+            fr: 'French',
+            de: 'German'
+        };
+
+        // Construct prompt
+        const targetLang = langMap[toLang] || toLang;
+        const prompt = fromLang === 'auto'
+            ? `Translate "${text}" to ${targetLang}.`
+            : `Translate "${text}" from ${langMap[fromLang] || fromLang} to ${targetLang}.`;
+
+        console.log('Gemini prompt:', prompt);
+
+        // Make API call to Gemini
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyChazsHCJQo53WM_g0oifM0ameYjXGkrIQ', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.3, // Lower temperature for more precise translations
+                    maxOutputTokens: 100
+                }
+            })
+        });
+
+        // Re-enable button
+        translateButton.disabled = false;
+        loadingDiv.classList.remove('active');
+
+        // Check if response is OK
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`API error: ${response.status} ${errorData.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Extract translated text
+        const translatedText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (translatedText) {
+            // Clean up any markdown or extra text
+            const cleanedText = translatedText.replace(/[`*]/g, '').trim();
+            resultDiv.textContent = cleanedText.charAt(0).toUpperCase() + cleanedText.slice(1);
+        } else {
+            resultDiv.textContent = 'Translation unavailable';
+        }
+    } catch (error) {
+        console.error('Translator error:', error.message);
+        document.getElementById('translatorLoading').classList.remove('active');
+        document.getElementById('translatedText').textContent = `Error translating text: ${error.message}`;
+        document.querySelector('.translator-button').disabled = false;
+    }
+}
+        // Wallpaper Generator
+        function generateWallpaper() {
+            try {
+                const canvas = document.getElementById('wallpaperCanvas');
+                const ctx = canvas.getContext('2d');
+                const color = document.getElementById('wallpaperColor').value;
+                ctx.fillStyle = color;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < 10; i++) {
+                    ctx.beginPath();
+                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 20, 0, 2 * Math.PI);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5})`;
+                    ctx.fill();
+                }
+                const downloadLink = document.getElementById('downloadWallpaper');
+                downloadLink.href = canvas.toDataURL('image/png');
+                downloadLink.download = 'wallpaper.png';
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = 'Download Wallpaper';
+            } catch (error) {
+                console.error('Wallpaper generator error:', error);
+            }
+        }
+
+        // Bookmarks
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [
+            { name: 'Gmail', url: 'https://mail.google.com' },
+            { name: 'YouTube', url: 'https://www.youtube.com' }
+        ];
+
+        function updateBookmarks() {
+            try {
+                const bookmarksList = document.getElementById('bookmarks');
+                bookmarksList.innerHTML = bookmarks.map(b => `<li><a href="${b.url}">${b.name}</a> <button onclick="removeBookmark('${b.url}')">X</button></li>`).join('');
+                localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            } catch (error) {
+                console.error('Bookmarks error:', error);
+            }
+        }
+
+        function addBookmark() {
+            try {
+                const urlInput = document.getElementById('bookmarkUrl');
+                let url = urlInput.value.trim();
+                if (!url) return;
+                if (!url.startsWith('http')) url = 'https://' + url;
+                const name = url.replace(/^https?:\/\//, '').split('/')[0];
+                bookmarks.push({ name, url });
+                localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                updateBookmarks();
+                urlInput.value = '';
+            } catch (error) {
+                console.error('Add bookmark error:', error);
+            }
+        }
+
+        function removeBookmark(url) {
+            try {
+                bookmarks = bookmarks.filter(b => b.url !== url);
+                updateBookmarks();
+            } catch (error) {
+                console.error('Remove bookmark error:', error);
+            }
+        }
+
+        // Particle Animation
+        function createParticles() {
+            try {
+                const particlesDiv = document.getElementById('particles');
+                for (let i = 0; i < 5; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.left = `${Math.random() * 100}vw`;
+                    particle.style.top = `${Math.random() * 100}vh`;
+                    particle.style.animationDelay = `${Math.random() * 20}s`;
+                    particlesDiv.appendChild(particle);
+                }
+            } catch (error) {
+                console.error('Particles error:', error);
+            }
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            try {
+                if (e.key === '/') {
+                    e.preventDefault();
+                    searchBar.focus();
+                }
+            } catch (error) {
+                console.error('Keyboard shortcut error:', error);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                updateRecentSearches();
+                updateNews();
+                updateTasks();
+                updateSnippets();
+                updateTimeZones();
+                updateMemos();
+                updateCrypto();
+                updateBookmarks();
+                drawMindMap();
+                createParticles();
+                document.body.classList.add('light-mode');
+                document.getElementById('currencyAmount').addEventListener('input', fetchCurrency);
+                document.getElementById('fromCurrency').addEventListener('change', fetchCurrency);
+                document.getElementById('toCurrency').addEventListener('change', fetchCurrency);
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
